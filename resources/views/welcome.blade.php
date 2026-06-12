@@ -6,7 +6,7 @@
     <title>Centro Educativo — Gestión Académica</title>
 
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -16,158 +16,224 @@
             background: #f7f9fc;
             color: #1a1a1a;
             font-family: 'Inter', sans-serif;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        header,
+        footer{
+            background: #0a3a66;
+            color: white;
+            text-align: center;
         }
 
         header{
-            background: #0a3a66;
-            color: white;
-            padding: 20px 0;
-            text-align: center;
+            height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         header h1{
-            font-family: 'Merriweather', serif;
-            margin: 0;
+            display: none;
         }
 
         header p{
-            margin: 5px 0 0;
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.1rem;
         }
 
-        .main-container{
-            flex: 1;
+        .hero{
+            height: calc(100vh - 90px);
+            background-image:
+                linear-gradient(
+                    rgba(255,255,255,0.55),
+                    rgba(255,255,255,0.55)
+                ),
+                url("{{ asset('images/fondo_tfg.png') }}");
+
+            background-size: cover;
+            background-position: center;
             display: flex;
             flex-direction: column;
-            align-items: center;  
-            justify-content: center; 
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            padding: 20px;
-            max-width: 1200px;
-            margin: auto;
-            gap: 25px;
+            padding: 0 20px;
+            box-sizing: border-box;
         }
 
-        .main-container h2{
+        .hero h2{
             font-family: 'Merriweather', serif;
-            font-size: 1.8rem;
+            font-size: 2.3rem;
             color: #0a3a66;
-        }
-
-        .main-container p{
-            max-width: 750px;
-            color: #333;
-        }
-
-        .btn-login{
-            padding: 12px 28px;
-            background: #0a3a66;
-            color: white;
-            font-weight: 600;
-            border-radius: 6px;
-            text-decoration: none;
-            transition: 0.2s;
-        }
-
-        .btn-login:hover{
-            background: #05233f;
+            margin: 80px 0 30px;
         }
 
         .cards{
             display: flex;
             justify-content: center;
-            gap: 20px;
+            align-items: stretch;
+            gap: 22px;
             width: 100%;
-            max-width: 1100px;
-            flex-wrap: wrap;
+            max-width: 1200px;
+            flex-wrap: nowrap;
         }
 
         .card{
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            width: 30%;
-            min-width: 250px;
+            flex: 1;
+            min-width: 0;
+            background: rgba(255,255,255,0.95);
+            border-radius: 14px;
+            padding: 22px 20px;
             border: 1px solid #dfe6ee;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            transition: transform .2s ease;
+        }
+
+        .card:hover{
+            transform: translateY(-4px);
+        }
+
+        .icono{
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            background: #0a3a66;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
         }
 
         .card h3{
             font-family: 'Merriweather', serif;
-            margin-bottom: 10px;
             color: #0a3a66;
+            margin-bottom: 12px;
+        }
+
+        .card p{
+            color: #333;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .btn-login{
+            margin-top: 25px;
+            padding: 13px 32px;
+            background: #0a3a66;
+            color: white;
+            font-weight: 700;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: .2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+        }
+
+        .btn-login:hover{
+            background: #05233f;
+            transform: translateY(-2px);
         }
 
         footer{
-            background: #0a3a66;
-            color: white;
-            text-align: center;
-            padding: 12px 0;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 0.85rem;
         }
 
-        @media (max-width: 768px){
-            .card{
-                width: 100%;
+        @media (max-width: 900px){
+
+            body{
+                overflow: auto;
             }
 
-            .main-container h2{
-                font-size: 1.5rem;
+            .hero{
+                height: auto;
+                min-height: calc(100vh - 90px);
+                padding: 30px 20px;
+            }
+
+            .hero h2{
+                margin-top: 20px;
+                font-size: 1.8rem;
+            }
+
+            .cards{
+                flex-wrap: wrap;
+            }
+
+            .card{
+                width: 100%;
             }
         }
     </style>
 </head>
 
 <body>
-    <header>
-        <h1>Gestión Académica</h1>
-        <p>¡Bienvenido al Portal de Gestión Académica de tu Centro Educativo!</p>
-    </header>
 
-    <div class="main-container">
-        <h2>Plataforma de Gestión Académica</h2>
+<header>
+    <p>¡Bienvenido al Portal de Gestión Académica de tu Centro Educativo!</p>
+</header>
 
-        <p>
-            Sistema destinado a la administración del personal docente, asignaturas y procesos académicos
-            del centro educativo. Una solución segura, moderna y adaptada a estándares de administración profesional.
-        </p>
+<main class="hero">
 
-        <a href="{{ route('login') }}" class="btn-login">Iniciar Sesión</a>
+    <h2>Plataforma de Gestión Académica</h2>
 
-        <div class="cards">
-            <div class="card">
-                <h3>Profesores</h3>
-                <p>
-                    Administración completa del personal docente, asignación de materias
-                    y gestión de perfiles profesionales. 
-                </p>
-                <p>
-                    Acceso controlado y trazabilidad completa.
-                </p>
-            </div>
+    <div class="cards">
+        <div class="card">
+            <div class="icono">👨‍🏫</div>
 
-            <div class="card">
-                <h3>Asignaturas</h3>
-                <p>
-                    Organización estructurada de materias, planificación académica
-                    y optimización de recursos educativos del centro.
-                </p>
-            </div>
+            <h3>Profesores</h3>
 
-            <div class="card">
-                <h3>Administración</h3>
-                <p>
-                    Panel exclusivo para administradores. Supervisión completa del sistema,
-                    seguridad reforzada y gestión centralizada.
-                </p>
-            </div>
+            <p>
+                Administración completa del personal docente,
+                asignación de materias y gestión de perfiles
+                profesionales.
+                <br><br>
+                Acceso controlado y trazabilidad completa.
+            </p>
         </div>
+
+        <div class="card">
+            <div class="icono">📚</div>
+
+            <h3>Asignaturas</h3>
+
+            <p>
+                Organización estructurada de materias,
+                planificación académica y optimización
+                de recursos educativos del centro.
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="icono">🛡️</div>
+
+            <h3>Administración</h3>
+
+            <p>
+                Panel exclusivo para administradores.
+                Supervisión completa del sistema,
+                seguridad reforzada y gestión centralizada.
+            </p>
+        </div>
+
     </div>
 
-    <footer>
-        © 2026 Plataforma de Gestión Académica
-    </footer>
+    <a href="{{ route('login') }}" class="btn-login">
+        Iniciar Sesión
+    </a>
+
+</main>
+
+<footer>
+    © 2026 Plataforma de Gestión Académica
+</footer>
+
 </body>
 </html>
