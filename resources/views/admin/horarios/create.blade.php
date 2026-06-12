@@ -56,7 +56,7 @@
             </div>
 
             <div class="flex justify-between items-center mt-10">
-                <a href="{{ route('admin.horarios.index', ['profesor' => $user_id]) }}" class="text-gray-600 hover:text-gray-900 font-medium transition">
+                <a href="{{ route('admin.horarios.index', ['profesor' => $user_id]) }}" class="px-5 py-3 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold transition">
                     Volver
                 </a>
 
