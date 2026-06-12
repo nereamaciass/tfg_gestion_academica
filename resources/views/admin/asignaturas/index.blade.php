@@ -27,85 +27,91 @@
     </a>
 </div>
 
-<div class="bg-white shadow rounded-lg p-6">
-    <table class="w-full text-left border-collapse">
+<div class="bg-white shadow rounded-lg p-6 overflow-x-auto">
+    <table class="w-full text-center border-collapse">
         <thead>
             <tr class="border-b text-gray-600">
-                <th class="py-3 px-4">
-                    <a href="{{ request()->fullUrlWithQuery(['sort' => $direction === 'desc' && $sort === 'nombre' ? null : 'nombre', 'direction' => $sort !== 'nombre' ? 'asc' : ($direction === 'asc' ? 'desc' : ($direction === 'desc' ? 'default' : 'asc'))]) }}" class="flex items-center gap-1 hover:text-blue-600">
+                <th class="py-3 px-2 text-left">
+                    <a href="{{ request()->fullUrlWithQuery(['sort' => $direction === 'desc' && $sort === 'nombre' ? null : 'nombre', 'direction' => $sort !== 'nombre' ? 'asc' : ($direction === 'asc' ? 'desc' : ($direction === 'desc' ? 'default' : 'asc'))]) }}" class="inline-flex items-center gap-1 hover:text-blue-600">
                         Nombre
                         @if($sort === 'nombre' && $direction === 'asc') ↑ @endif
                         @if($sort === 'nombre' && $direction === 'desc') ↓ @endif
                     </a>
                 </th>
-                <th class="py-3 px-4">
-                    <a href="{{ request()->fullUrlWithQuery(['sort' => $direction === 'desc' && $sort === 'codigo' ? null : 'codigo', 'direction' => $sort !== 'codigo' ? 'asc' : ($direction === 'asc' ? 'desc' : ($direction === 'desc' ? 'default' : 'asc'))]) }}" class="flex items-center gap-1 hover:text-blue-600">
+
+                <th class="py-3 px-4 text-center">
+                    <a href="{{ request()->fullUrlWithQuery(['sort' => $direction === 'desc' && $sort === 'codigo' ? null : 'codigo', 'direction' => $sort !== 'codigo' ? 'asc' : ($direction === 'asc' ? 'desc' : ($direction === 'desc' ? 'default' : 'asc'))]) }}" class="flex justify-center items-center gap-1 hover:text-blue-600">
                         Código
                         @if($sort === 'codigo' && $direction === 'asc') ↑ @endif
                         @if($sort === 'codigo' && $direction === 'desc') ↓ @endif
                     </a>
                 </th>
-                <th class="py-3 px-4">
-                    <a href="{{ request()->fullUrlWithQuery(['sort' => $direction === 'desc' && $sort === 'curso' ? null : 'curso', 'direction' => $sort !== 'curso' ? 'asc' : ($direction === 'asc' ? 'desc' : ($direction === 'desc' ? 'default' : 'asc'))]) }}" class="flex items-center gap-1 hover:text-blue-600">
-                    Curso
-                    @if($sort === 'curso' && $direction === 'asc') ↑ @endif
-                    @if($sort === 'curso' && $direction === 'desc') ↓ @endif
-                </a>
-            </th>
-                <th class="py-3 px-4">Color</th>
-                <th class="py-3 px-4">Profesores</th>
-                <th class="py-3 px-4">Acciones</th>
+
+                <th class="py-3 px-4 text-center">
+                    <a href="{{ request()->fullUrlWithQuery(['sort' => $direction === 'desc' && $sort === 'curso' ? null : 'curso', 'direction' => $sort !== 'curso' ? 'asc' : ($direction === 'asc' ? 'desc' : ($direction === 'desc' ? 'default' : 'asc'))]) }}" class="flex justify-center items-center gap-1 hover:text-blue-600">
+                        Curso
+                        @if($sort === 'curso' && $direction === 'asc') ↑ @endif
+                        @if($sort === 'curso' && $direction === 'desc') ↓ @endif
+                    </a>
+                </th>
+
+                <th class="py-3 px-4 text-center">Color</th>
+                <th class="py-3 px-4 text-center">Profesores</th>
+                <th class="py-3 px-4 text-center">Acciones</th>
             </tr>
         </thead>
 
         <tbody class="text-gray-800">
         @foreach($asignaturas as $asig)
             <tr class="border-b hover:bg-gray-50">
-                <td class="py-3 px-4">{{ $asig->nombre }}</td>
-                <td class="py-3 px-4">{{ $asig->codigo }}</td>
-                <td class="py-3 px-4">Curso {{ $asig->curso }}</td>
+                <td class="py-3 px-2 text-left align-middle">{{ $asig->nombre }}</td>
+                <td class="py-3 px-4 text-center align-middle">{{ $asig->codigo }}</td>
+                <td class="py-3 px-4 text-center align-middle">Curso {{ $asig->curso }}</td>
 
-                <td class="py-3 px-4">
-                    <span class="inline-block w-6 h-6 rounded" style="background-color: {{ $asig->color ?? '#004d80' }}">
-                    </span>
+                <td class="py-3 px-4 text-center align-middle">
+                    <span class="inline-block w-6 h-6 rounded align-middle" style="background-color: {{ $asig->color ?? '#004d80' }}"></span>
                 </td>
 
-                <td class="py-3 px-4">
+                <td class="py-3 px-4 text-center align-middle">
                     @if($asig->profesores->count())
-                        @foreach($asig->profesores as $prof)
-                            <span class="text-sm text-gray-700">
-                                {{ $prof->nombre }}
-                            </span><br>
-                        @endforeach
+                        <div class="flex flex-col items-center gap-1">
+                            @foreach($asig->profesores as $prof)
+                                <span class="text-sm text-gray-700">
+                                    {{ $prof->nombre }}
+                                </span>
+                            @endforeach
+                        </div>
                     @else
                         <span class="text-gray-400 italic">Sin profesores</span>
                     @endif
                 </td>
 
-                <td class="py-3 px-4 flex gap-4 items-center">
-                    <a href="{{ route('admin.asignaturas.show', $asig) }}" class="text-gray-600 hover:text-blue-600" title="Ver">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943  9.542 7-1.274 4.057-5.065 7-9.542  7-4.477 0-8.268-2.943-9.542-7z"/>
-                        </svg>
-                    </a>
-
-                    <a href="{{ route('admin.asignaturas.edit', $asig) }}" class="text-gray-600 hover:text-yellow-500" title="Editar">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 11l6-6 3 3-6 6H9v-3z"/>
-                        </svg>
-                    </a>
-
-                    <form id="form-eliminar-asignatura-{{ $asig->id }}" action="{{ route('admin.asignaturas.destroy', $asig) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-
-                        <button type="button" onclick="confirmarEliminacionAsignatura({{ $asig->id }})" class="text-gray-600 hover:text-red-600" title="Eliminar">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4m-6 4h8"/>
+                <td class="py-3 px-4 text-center align-middle">
+                    <div class="flex justify-center items-center gap-3">
+                        <a href="{{ route('admin.asignaturas.show', $asig) }}" class="w-9 h-9 flex items-center justify-center text-gray-600 hover:text-blue-600" title="Ver">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                             </svg>
-                        </button>
-                    </form>
+                        </a>
+
+                        <a href="{{ route('admin.asignaturas.edit', $asig) }}" class="w-9 h-9 flex items-center justify-center text-gray-600 hover:text-yellow-500" title="Editar">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 11l6-6 3 3-6 6H9v-3z"/>
+                            </svg>
+                        </a>
+
+                        <form id="form-eliminar-asignatura-{{ $asig->id }}" action="{{ route('admin.asignaturas.destroy', $asig) }}" method="POST" class="m-0 p-0 flex items-center">
+                            @csrf
+                            @method('DELETE')
+
+                            <button type="button" onclick="confirmarEliminacionAsignatura({{ $asig->id }})" class="w-9 h-9 flex items-center justify-center text-gray-600 hover:text-red-600" title="Eliminar">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4m-6 4h8"/>
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
                 </td>
             </tr>
         @endforeach
@@ -132,7 +138,7 @@
                 cancelButtonText: 'Cancelar',
                 reverseButtons: true,
                 scrollbarPadding: false,
-            heightAuto: false
+                heightAuto: false
             }).then((result)=>{
                 if (result.isConfirmed){
                     document.getElementById('form-eliminar-asignatura-' + id).submit();
