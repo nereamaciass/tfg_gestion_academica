@@ -69,7 +69,7 @@ class UsuarioController extends Controller{
     public function store(Request $request){
         $request->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:users,email|unique:profesores,email',
+            'email' => ['required', 'email:rfc,dns', 'regex:/^[^\s@]+@[^\s@]+\.[^\s@]+$/', 'unique:profesores,email', 'unique:users,email'],
             'password' => 'required|min:6',
             'role' => 'required|in:admin,profesor',
         ], [

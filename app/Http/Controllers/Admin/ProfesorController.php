@@ -78,8 +78,8 @@ class ProfesorController extends Controller{
     public function store(Request $request){
         $request->validate([
             'nombre' => 'required',
-            'email' => 'required|email|unique:profesores,email|unique:users,email',
-            'telefono' => 'nullable',
+            'email' => ['required', 'email:rfc,dns', 'regex:/^[^\s@]+@[^\s@]+\.[^\s@]+$/', 'unique:profesores,email', 'unique:users,email'],
+            'telefono' => ['nullable', 'regex:/^[^[67][0-9]{8}$/'],
             'departamento' => 'nullable',
             'crear_usuario' => 'nullable',
             'password' => 'nullable|min:6',
@@ -88,6 +88,7 @@ class ProfesorController extends Controller{
             'email.required' => 'Debes introducir un correo electrónico.',
             'email.email' => 'El correo electrónico no tiene un formato válido.',
             'email.unique' => 'Ya existe un usuario o profesor con ese correo electrónico.',
+            'telefono.regex' => 'El teléfono debe tener 9 cifras y comenzar por 6 o 7.',
             'password.min' => 'La contraseña debe tener al menos 6 caracteres.',
         ]);
 
