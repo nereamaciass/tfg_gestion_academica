@@ -42,7 +42,9 @@
         </div>
 
         <div class="flex justify-between mt-6">
-            <a href="{{ route('admin.usuarios.index') }}" class="text-gray-600">Volver</a>
+            <a href="{{ route('admin.usuarios.index') }}" class="px-5 py-3 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold transition">
+                Volver
+            </a>
             <button class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded">
                 Actualizar
             </button>

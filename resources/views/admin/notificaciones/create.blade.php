@@ -47,7 +47,7 @@
             </div>
 
             <div class="flex items-center justify-between pt-2">
-                <a href="{{ route('admin.notificaciones.index') }}" class="text-gray-600 hover:text-gray-900 font-medium transition">
+                <a href="{{ route('admin.notificaciones.index') }}" class="px-5 py-3 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold transition">
                     Volver
                 </a>
 

@@ -47,7 +47,7 @@
     </div>
 
     <div class="flex justify-between mt-6">
-        <a href="{{ route('admin.asignaturas.index') }}" class="text-gray-600">
+        <a href="{{ route('admin.asignaturas.index') }}" class="px-5 py-3 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold transition">
             Volver
         </a>
 
