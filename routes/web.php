@@ -20,6 +20,10 @@ use App\Http\Controllers\Profesor\CalendarioProfesorController;
 
 use App\Http\Controllers\ChatController;
 
+use App\Models\User;
+use App\Models\Asignatura;
+use App\Models\Horario;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -57,7 +61,12 @@ Route::middleware(['auth', 'admin'])
     ->group(function () {
 
         Route::get('/dashboard', function () {
-            return view('admin.dashboard');
+            return view('admin.dashboard', [
+                'totalProfesores' => User::where('role', 'profesor')->count(),
+                'totalAsignaturas' => Asignatura::count(),
+                'totalUsuarios' => User::count(),
+                'totalHorarios' => Horario::count(),
+            ]);
         })->name('dashboard');
 
         Route::get('/perfil', function () {
