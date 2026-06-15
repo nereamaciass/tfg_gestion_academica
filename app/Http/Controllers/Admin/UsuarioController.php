@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Profesor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UsuarioController extends Controller{
 
@@ -76,6 +77,7 @@ class UsuarioController extends Controller{
             'name.required' => 'Debes introducir un nombre.',
             'email.required' => 'Debes introducir un correo electrónico.',
             'email.email' => 'Debes introducir un correo electrónico válido.',
+            'email.regex' => 'El correo electrónico debe tener un dominio válido después de la @.',
             'email.unique' => 'Ese correo electrónico ya está registrado.',
             'password.required' => 'Debes introducir una contraseña.',
             'password.min' => 'La contraseña debe tener al menos 6 caracteres.',
@@ -88,6 +90,7 @@ class UsuarioController extends Controller{
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
+            'slug' => Str::slug($request->name),
         ]);
 
         if($request->role === 'profesor'){
@@ -97,6 +100,7 @@ class UsuarioController extends Controller{
                 'telefono' => null,
                 'departamento' => null,
                 'user_id' => $user->id,
+                'slug' => Str::slug($request->name),
             ]);
         }
 
@@ -114,24 +118,27 @@ class UsuarioController extends Controller{
 
     public function update(Request $request, User $usuario){
         $profesor = $usuario->profesor;
+
         $request->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $usuario->id . '|unique:profesores,email,' . ($profesor?->id ?? 'NULL'),
+            'email' => ['required', 'email:rfc,dns', 'regex:/^[^\s@]+@[^\s@]+\.[^\s@]+$/', 'unique:users,email,' . $usuario->id, 'unique:profesores,email,' . ($profesor?->id ?? 'NULL')],
             'role' => 'required|in:admin,profesor',
             'password' => 'nullable|min:6',
         ],[
             'name.required' => 'Debes introducir un nombre.',
             'email.required' => 'Debes introducir un correo electrónico.',
             'email.email' => 'Debes introducir un correo electrónico válido.',
+            'email.regex' => 'El correo electrónico debe tener un dominio válido después de la @.',
             'email.unique' => 'Ese correo electrónico ya está registrado.',
             'role.required' => 'Debes seleccionar un rol.',
             'role.in' => 'El rol seleccionado no es válido.',
             'password.min' => 'La contraseña debe tener al menos 6 caracteres.',
         ]);
         
-        $usuario->name  = $request->name;
+        $usuario->name = $request->name;
         $usuario->email = $request->email;
-        $usuario->role  = $request->role;
+        $usuario->role = $request->role;
+        $usuario->slug = Str::slug($request->name);
         
         if($request->filled('password')){
             $usuario->password = Hash::make($request->password);
@@ -144,6 +151,7 @@ class UsuarioController extends Controller{
                 $profesor->update([
                     'nombre' => $request->name,
                     'email' => $request->email,
+                    'slug' => Str::slug($request->name),
                 ]);
             }else{
                 Profesor::create([
@@ -152,6 +160,7 @@ class UsuarioController extends Controller{
                     'telefono' => null,
                     'departamento' => null,
                     'user_id' => $usuario->id,
+                    'slug' => Str::slug($request->name),
                 ]);
             }
         }else{
@@ -166,7 +175,7 @@ class UsuarioController extends Controller{
     }
 
     public function destroy(User $usuario){
-        if($usuario->profesor) {
+        if($usuario->profesor){
             $usuario->profesor->delete();
         }
 

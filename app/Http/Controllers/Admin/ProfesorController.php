@@ -7,6 +7,7 @@ use App\Models\Asignatura;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class ProfesorController extends Controller{
     public function index(Request $request){
@@ -68,6 +69,7 @@ class ProfesorController extends Controller{
             ->where('departamento', '!=', '')
             ->distinct()
             ->pluck('departamento');
+
         $asignaturas = Asignatura::orderBy('curso')
             ->orderBy('nombre')
             ->get();
@@ -79,7 +81,7 @@ class ProfesorController extends Controller{
         $request->validate([
             'nombre' => 'required',
             'email' => ['required', 'email:rfc,dns', 'regex:/^[^\s@]+@[^\s@]+\.[^\s@]+$/', 'unique:profesores,email', 'unique:users,email'],
-            'telefono' => ['nullable', 'regex:/^[^[67][0-9]{8}$/'],
+            'telefono' => ['nullable', 'regex:/^[67][0-9]{8}$/'],
             'departamento' => 'nullable',
             'crear_usuario' => 'nullable',
             'password' => 'nullable|min:6',
@@ -87,6 +89,7 @@ class ProfesorController extends Controller{
             'nombre.required' => 'Debes introducir el nombre del profesor.',
             'email.required' => 'Debes introducir un correo electrónico.',
             'email.email' => 'El correo electrónico no tiene un formato válido.',
+            'email.regex' => 'El correo electrónico debe tener un dominio válido después de la @.',
             'email.unique' => 'Ya existe un usuario o profesor con ese correo electrónico.',
             'telefono.regex' => 'El teléfono debe tener 9 cifras y comenzar por 6 o 7.',
             'password.min' => 'La contraseña debe tener al menos 6 caracteres.',
@@ -116,6 +119,7 @@ class ProfesorController extends Controller{
             'telefono' => $request->telefono,
             'departamento' => $request->departamento,
             'user_id' => $user?->id,
+            'slug' => Str::slug($request->nombre),
         ]);
 
         $asignaturas = array_filter($request->asignaturas ?? []);
@@ -133,7 +137,9 @@ class ProfesorController extends Controller{
         $asignaturas = Asignatura::orderBy('curso')
             ->orderBy('nombre')
             ->get();
+
         $asignaturasAsignadas = $profesor->asignaturas->pluck('id')->toArray();
+
         $departamentos = Profesor::select('departamento')
             ->whereNotNull('departamento')
             ->where('departamento', '!=', '')
@@ -150,17 +156,20 @@ class ProfesorController extends Controller{
 
     public function update(Request $request, Profesor $profesor){
         $userId = $profesor->user_id;
+
         $request->validate([
             'nombre' => 'required',
-            'telefono' => 'nullable',
+            'telefono' => ['nullable', 'regex:/^[67][0-9]{8}$/'],
             'departamento' => 'nullable',
-            'email' => 'required|email|unique:profesores,email,' . $profesor->id . '|unique:users,email,' . $userId,
+            'email' => ['required', 'email:rfc,dns', 'regex:/^[^\s@]+@[^\s@]+\.[^\s@]+$/', 'unique:profesores,email,' . $profesor->id, 'unique:users,email,' . $userId],
             'password' => 'nullable|min:6',
         ],[
             'nombre.required' => 'Debes introducir el nombre del profesor.',
             'email.required' => 'Debes introducir un correo electrónico.',
             'email.email' => 'El correo electrónico no tiene un formato válido.',
+            'email.regex' => 'El correo electrónico debe tener un dominio válido después de la @.',
             'email.unique' => 'Ya existe un usuario o profesor con ese correo electrónico.',
+            'telefono.regex' => 'El teléfono debe tener 9 cifras y comenzar por 6 o 7.',
             'password.min' => 'La contraseña debe tener al menos 6 caracteres.',
         ]);
 
@@ -169,6 +178,7 @@ class ProfesorController extends Controller{
             'email' => $request->email,
             'telefono' => $request->telefono,
             'departamento' => $request->departamento,
+            'slug' => Str::slug($request->nombre),
         ]);
 
         if($profesor->user){
@@ -182,7 +192,7 @@ class ProfesorController extends Controller{
             $profesor->user->save();
         }
 
-        if (!$profesor->user && $request->has('crear_usuario')) {
+        if(!$profesor->user && $request->has('crear_usuario')){
             $request->validate([
                 'password' => 'required|min:6',
             ],[
