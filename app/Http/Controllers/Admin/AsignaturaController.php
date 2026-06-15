@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use App\Models\Asignatura;
 use App\Models\Profesor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class AsignaturaController extends Controller{
     public function index(Request $request){
@@ -20,7 +22,7 @@ class AsignaturaController extends Controller{
 
         $allowedSorts = ['nombre', 'codigo', 'curso'];
 
-        if ($sort && !in_array($sort, $allowedSorts)) {
+        if($sort && !in_array($sort, $allowedSorts)){
             $sort = null;
         }
 
@@ -35,7 +37,6 @@ class AsignaturaController extends Controller{
                     ->orWhere('codigo', 'like', "%$buscar%");
                 });
             })
-
             ->when($curso, function ($query, $curso){
                 $query->where('curso', $curso);
             });
@@ -84,14 +85,13 @@ class AsignaturaController extends Controller{
             'curso.required'  => 'Debes indicar el curso.'
         ]);
 
-        $asignatura = Asignatura::create(
-            $request->only(
-                'nombre',
-                'codigo',
-                'curso',
-                'color'
-            )
-        );
+        $asignatura = Asignatura::create([
+            'nombre' => $request->nombre,
+            'codigo' => $request->codigo,
+            'curso' => $request->curso,
+            'color' => $request->color,
+            'slug' => Str::slug($request->nombre)
+        ]);
 
         $asignatura->profesores()->sync(
             $request->profesores ?? []
@@ -118,7 +118,7 @@ class AsignaturaController extends Controller{
         $profesoresAsignados = $asignatura->profesores
             ->pluck('id')
             ->toArray();
-            
+
         return view('admin.asignaturas.edit', compact(
             'asignatura',
             'profesores',
@@ -139,15 +139,14 @@ class AsignaturaController extends Controller{
             'curso.required'  => 'Debes indicar el curso.'
         ]);
 
-        $asignatura->update(
-            $request->only(
-                'nombre',
-                'codigo',
-                'curso',
-                'color'
-            )
-        );
-        
+        $asignatura->update([
+            'nombre' => $request->nombre,
+            'codigo' => $request->codigo,
+            'curso' => $request->curso,
+            'color' => $request->color,
+            'slug' => Str::slug($request->nombre)
+        ]);
+
         $asignatura->profesores()->sync(
             $request->profesores ?? []
         );
@@ -167,7 +166,7 @@ class AsignaturaController extends Controller{
 
         $asignatura->profesores()->detach();
         $asignatura->delete();
-        
+
         return redirect()
             ->route('admin.asignaturas.index')
             ->with(

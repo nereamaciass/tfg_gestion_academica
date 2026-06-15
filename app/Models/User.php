@@ -15,6 +15,7 @@ class User extends Authenticatable{
         'password',
         'role',
         'profile_photo',
+        'slug',
     ];
 
     protected $hidden = [
@@ -27,6 +28,10 @@ class User extends Authenticatable{
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getRouteKeyName(){
+        return 'slug';
     }
 
     public function profesor(){
