@@ -49,6 +49,28 @@
             </div>
         </div>
 
+        @if(session('warning'))
+            <div id="warningMessage"
+                class="mx-4 mt-3 mb-2 bg-amber-50 border border-amber-200 text-amber-700 px-3 py-2 rounded-lg text-xs">
+                {{ session('warning') }}
+            </div>
+
+            <script>
+                setTimeout(() => {
+                    const aviso = document.getElementById('warningMessage');
+
+                    if (aviso) {
+                        aviso.style.transition = 'opacity .5s ease';
+                        aviso.style.opacity = '0';
+
+                        setTimeout(() => {
+                            aviso.remove();
+                        }, 500);
+                    }
+                }, 5000);
+            </script>
+        @endif
+
         <div id="chatBox" class="flex-1 overflow-y-auto bg-slate-100 p-4 flex flex-col gap-3 min-h-0">
             @forelse ($mensajes as $m)
                 @php

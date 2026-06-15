@@ -118,7 +118,11 @@ class ChatController extends Controller{
             'leido' => false,
         ]);
 
-        broadcast(new MensajeEnviado($mensaje))->toOthers();
+        try{
+            broadcast(new MensajeEnviado($mensaje))->toOthers();
+        }catch(\Exception $e){
+            return back()->with('warning', 'El mensaje se ha enviado correctamente, pero la actualización en tiempo real no está disponible actualmente.');
+        }
 
         return back();
     }
